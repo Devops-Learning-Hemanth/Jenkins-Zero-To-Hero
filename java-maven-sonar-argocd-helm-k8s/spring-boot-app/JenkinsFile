@@ -51,7 +51,7 @@ pipeline {
 
     stage('Update Deployment File') {
         environment {
-            GIT_REPO_NAME = "Devops-Learning-Hemanth/Jenkins-Zero-To-Hero"
+            GIT_REPO_NAME = "Hemanthdyaga/Devops-Learning-Hemanth/Jenkins-Zero-To-Hero"
             GIT_USER_NAME = "Hemanthdyaga"
         }
         steps {
