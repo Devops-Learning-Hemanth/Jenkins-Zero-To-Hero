@@ -72,9 +72,10 @@ pipeline {
                 # Push to GitHub
                 git push https://${GITHUB_TOKEN}@github.com/Devops-Learning-Hemanth/Jenkins-Zero-To-Hero.git HEAD:main
             '''
-          }
-       }
-   }
+         }
+      }
+    }
+  }
 }
 
 
