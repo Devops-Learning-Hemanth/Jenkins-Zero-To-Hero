@@ -50,25 +50,32 @@ pipeline {
 }
   
 
-    stage('Update Deployment File') {
-            environment {
-                GIT_REPO_NAME = "Jenkins-Zero-To-Hero"
-                GIT_USER_NAME =  "Devops-Learning-Hemanth"
-            }
-            steps {
-                withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
-                    sh '''
-                        BUILD_NUMBER=${BUILD_NUMBER}
-                        sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
-                        git add java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
-                        git commit -m "Update deployment image to version ${BUILD_NUMBER}" || echo "No changes to commit"
-                        git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:main
-                    '''
-                }
-            }
+   stage('Update Deployment File') {
+    steps {
+        withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
+            sh '''
+                # Ensure Git trusts this workspace
+                git config --global --add safe.directory "${WORKSPACE}"
+
+                # Update image tag
+                BUILD_NUMBER=${BUILD_NUMBER}
+                sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
+
+                # Git config
+                git config user.email "dyagahemanth35@gmail.com"
+                git config user.name "Hemanthdyaga"
+
+                # Commit only if changes exist
+                git add java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
+                git diff --cached --quiet || git commit -m "Update deployment image to version ${BUILD_NUMBER}"
+
+                # Push to GitHub
+                git push https://${GITHUB_TOKEN}@github.com/Devops-Learning-Hemanth/Jenkins-Zero-To-Hero.git HEAD:main
+            '''
         }
     }
 }
+
 
 
 
